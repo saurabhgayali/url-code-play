@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { runProgram } from "@/lib/interpreter";
+import { checkReadTarget } from "@/lib/read-guard";
 
 const MAX_BYTES = 512 * 1024; // 512 KB cap
 
@@ -25,6 +26,11 @@ async function fetchText(rawTarget: string): Promise<{ text: string; status: num
     url = new URL(/^https?:\/\//i.test(target) ? target : `https://${target}`);
   } catch {
     return { text: `read: invalid url "${target}"\n`, status: 400 };
+  }
+
+  const decision = checkReadTarget(url.hostname);
+  if (!decision.allowed) {
+    return { text: `${decision.reason}\n`, status: 403 };
   }
 
   try {
