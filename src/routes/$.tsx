@@ -87,6 +87,7 @@ export const Route = createFileRoute("/$")({
           let i = 1;
           for (; i < segments.length; i++) {
             const seg = segments[i];
+            if (seg === undefined) break;
             if (seg === "") {
               const prev = urlSegs[urlSegs.length - 1];
               // Keep the // of a scheme like https: — only a // after a
