@@ -99,7 +99,8 @@
 /print/Hello%20World          <span class="c">-&gt;  Hello World</span>
 /set/x/10/add/x/20/print/x    <span class="c">-&gt;  30</span>
 /repeat/3/print/ha            <span class="c">-&gt;  ha, one per line</span>
-/read/https://example.com     <span class="c">-&gt;  the page, as raw text</span></pre>
+/read/example.com             <span class="c">-&gt;  the page, as raw text</span>
+/read/example.com;/print/done <span class="c">-&gt;  the page, then "done"</span></pre>
       <pre>
 <span class="c">$</span> curl https://url-code-play.lovable.app/set/n/6/multiply/n/7/print/n
 42</pre>
@@ -169,8 +170,8 @@
           <tr><td>/multiply/&lt;var&gt;/&lt;value&gt;</td><td>Multiply a variable.</td></tr>
           <tr><td>/divide/&lt;var&gt;/&lt;value&gt;</td><td>Divide a variable; dividing by zero is an inline error.</td></tr>
           <tr><td>/repeat/&lt;n&gt;/&lt;command&gt;</td><td>Run the following single command n times.</td></tr>
-          <tr><td>/read/&lt;url&gt;</td><td>Fetch a public URL server-side and emit it as raw text.</td></tr>
-          <tr><td>/read/&lt;url&gt;//&lt;command&gt;</td><td>End the read target and continue the program after it.</td></tr>
+          <tr><td>/read/&lt;url&gt;</td><td>Fetch a public URL server-side and emit it as raw text. No https:// needed — just the domain.</td></tr>
+          <tr><td>/read/&lt;url&gt;;&lt;command&gt;</td><td>A semicolon ends the read target and the program continues after it.</td></tr>
         </tbody>
       </table>
 

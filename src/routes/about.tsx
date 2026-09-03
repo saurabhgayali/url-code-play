@@ -97,9 +97,10 @@ function AboutPage() {
           </p>
           <p>
             Reads are guarded: a 15-second timeout, a 512&nbsp;KB response cap with a truncation
-            notice, and a strict double-slash terminator so a read can be piped —{" "}
-            <code className="font-mono text-chart-2">/read/https://example.com//print/done</code>{" "}
-            fetches the page, then continues executing the program after it.
+            notice, and a semicolon terminator so a read can be piped —{" "}
+            <code className="font-mono text-chart-2">/read/example.com;/print/done</code> fetches
+            the page, then continues executing the program after it. Write the target without{" "}
+            <code className="font-mono">https://</code> — the scheme is added automatically.
           </p>
           <p className="text-muted-foreground">
             It is a convenience for public content only — it sends no credentials, cookies, or

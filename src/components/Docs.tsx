@@ -7,7 +7,7 @@ const COMMANDS: [string, string][] = [
   ["/divide/<var>/<n>", "var = var / n (division by zero errors)"],
   ["/repeat/<n>/<command>", "run the single command that follows, n times"],
   ["/read/<url>", "fetch a url server-side and return its raw text, like opening it in notepad"],
-  ["/read/<url>//<commands>", "// terminates the url; commands after it run and append their output"],
+  ["/read/<url>;<commands>", "; terminates the url; commands after it run and append their output"],
 ];
 
 const SAMPLES: { title: string; note: string; path: string }[] = [
@@ -48,23 +48,23 @@ const SAMPLES: { title: string; note: string; path: string }[] = [
   },
   {
     title: "Read a page as plain text",
-    note: "HTML is returned as source text, never rendered",
-    path: "/read/https://example.com",
+    note: "no scheme needed — https:// is added automatically; HTML is returned as source text, never rendered",
+    path: "/read/example.com",
   },
   {
     title: "Read an RSS feed, then pipe",
-    note: "// ends the url; the commands after it run once the fetch completes",
-    path: "/read/https://news.ycombinator.com/rss//print/--%20end%20of%20feed%20--",
+    note: "; ends the url; the commands after it run once the fetch completes",
+    path: "/read/news.ycombinator.com/rss;/print/--%20end%20of%20feed%20--",
   },
   {
     title: "Read, then compute a summary",
     note: "piping composes a fetch with arithmetic in a single shareable url",
-    path: "/read/https://example.com//set/items/3/multiply/items/7/print/items",
+    path: "/read/example.com;/set/items/3/multiply/items/7/print/items",
   },
   {
     title: "Read, then repeat a separator",
-    note: "any command sequence is valid after the // terminator",
-    path: "/read/https://example.com//repeat/3/print/done",
+    note: "any command sequence is valid after the ; terminator",
+    path: "/read/example.com;/repeat/3/print/done",
   },
   {
     title: "Escaping and spaces",
