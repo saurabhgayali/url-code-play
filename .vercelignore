@@ -1,0 +1,3 @@
+# The root index.html is the GitHub Pages landing page only.
+# Excluded so Vercel never serves it instead of the TanStack app in src/.
+index.html

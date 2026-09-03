@@ -3,18 +3,19 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>URL Code — the URL is the program</title>
+    <title>URL Code — write programs in the URL path</title>
     <meta
       name="description"
-      content="URL Code turns a URL path into an executable program: print, variables, arithmetic, repeat, and /read for fetching any page as plain text without CORS."
+      content="URL Code is a tiny URL-native language: print, variables, arithmetic, repeat, piping, and /read for fetching any page as plain text without CORS. Feature overview and live demo."
     />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="URL Code — the URL is the program" />
+    <meta property="og:title" content="URL Code — write programs in the URL path" />
     <meta
       property="og:description"
-      content="Write a tiny program in the URL path, share the link, it runs. Plain-text, API-style output. No accounts, no database."
+      content="A link is the whole program. Plain-text, API-style output. No accounts, no database, no client JavaScript."
     />
     <meta name="twitter:card" content="summary" />
+    <link rel="canonical" href="https://saurabhgayali.github.io/urlcodeplay/" />
     <style>
       :root {
         color-scheme: dark;
@@ -24,165 +25,199 @@
         --fg: #e6edf3;
         --mut: #97a3b1;
         --acc: #7ee787;
+        --acc2: #79c0ff;
       }
-      * {
-        box-sizing: border-box;
-      }
+      * { box-sizing: border-box; }
       body {
         margin: 0;
         background: var(--bg);
         color: var(--fg);
-        font: 16px/1.6 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+        font: 16px/1.65 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
       }
-      .wrap {
-        max-width: 820px;
-        margin: 0 auto;
-        padding: 56px 20px 64px;
-      }
-      code,
-      .mono {
-        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      }
-      h1 {
-        font-size: 2rem;
-        margin: 0 0 8px;
-        letter-spacing: -0.02em;
-      }
-      .tag {
-        color: var(--mut);
-        margin: 0 0 24px;
-      }
-      .cta {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        margin-bottom: 36px;
-      }
+      .wrap { max-width: 900px; margin: 0 auto; padding: 56px 20px 72px; }
+      code, .mono, pre, table { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+      h1 { font-size: 2.2rem; margin: 0 0 10px; letter-spacing: -0.02em; }
+      .tag { color: var(--mut); margin: 0 0 10px; max-width: 62ch; }
+      .byline { color: var(--mut); font-size: 0.85rem; margin: 0 0 26px; }
+      .cta { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 34px; }
       .btn {
-        display: inline-block;
-        padding: 10px 18px;
-        border-radius: 8px;
-        text-decoration: none;
-        font-size: 0.9rem;
-        border: 1px solid var(--line);
-        color: var(--fg);
-        background: var(--card);
+        display: inline-block; padding: 10px 18px; border-radius: 8px; text-decoration: none;
+        font-size: 0.9rem; border: 1px solid var(--line); color: var(--fg); background: var(--card);
       }
-      .btn.primary {
-        background: var(--acc);
-        color: #0d1117;
-        border-color: var(--acc);
-        font-weight: 600;
-      }
+      .btn:hover { border-color: var(--acc); }
+      .btn.primary { background: var(--acc); color: #0d1117; border-color: var(--acc); font-weight: 600; }
       h2 {
-        font-size: 0.78rem;
-        text-transform: uppercase;
-        letter-spacing: 0.12em;
-        color: var(--mut);
-        margin: 36px 0 14px;
+        font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.12em;
+        color: var(--mut); margin: 44px 0 14px;
       }
-      .grid {
-        display: grid;
-        gap: 14px;
-        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      }
-      .card {
-        border: 1px solid var(--line);
-        background: var(--card);
-        border-radius: 12px;
-        padding: 16px 18px;
-      }
-      .card h3 {
-        margin: 0 0 6px;
-        font-size: 0.95rem;
-      }
-      .card p {
-        margin: 0;
-        color: var(--mut);
-        font-size: 0.88rem;
-      }
+      .grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+      .card { border: 1px solid var(--line); background: var(--card); border-radius: 12px; padding: 16px 18px; }
+      .card h3 { margin: 0 0 6px; font-size: 0.95rem; }
+      .card p { margin: 0; color: var(--mut); font-size: 0.88rem; }
       pre {
-        background: #010409;
-        border: 1px solid var(--line);
-        border-radius: 12px;
-        padding: 16px;
-        overflow-x: auto;
-        font-size: 0.85rem;
-        color: var(--acc);
+        background: #010409; border: 1px solid var(--line); border-radius: 12px; padding: 16px;
+        overflow-x: auto; font-size: 0.85rem; color: var(--acc); margin: 0 0 14px;
       }
-      footer {
-        margin-top: 48px;
-        color: var(--mut);
-        font-size: 0.82rem;
+      pre .c { color: var(--mut); }
+      table { width: 100%; border-collapse: collapse; font-size: 0.84rem; }
+      th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+      th { color: var(--mut); font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.7rem; }
+      td:first-child { color: var(--acc2); white-space: nowrap; }
+      td:last-child { color: var(--mut); }
+      ol.steps { color: var(--mut); font-size: 0.9rem; padding-left: 20px; }
+      ol.steps code { color: var(--acc); }
+      details {
+        border: 1px solid var(--line); background: var(--card); border-radius: 10px;
+        padding: 12px 16px; margin-bottom: 10px;
       }
-      a {
-        color: var(--acc);
-      }
+      summary { cursor: pointer; font-size: 0.92rem; }
+      details p { color: var(--mut); font-size: 0.88rem; margin: 10px 0 0; }
+      footer { margin-top: 52px; padding-top: 18px; border-top: 1px solid var(--line); color: var(--mut); font-size: 0.82rem; }
+      a { color: var(--acc); }
     </style>
   </head>
   <body>
     <main class="wrap">
-      <h1>URL Code</h1>
-      <p class="tag">
-        The URL <em>is</em> the program. Write commands in the path, share the link, it runs — and
-        answers in plain text like an API.
-      </p>
+      <header>
+        <h1>URL Code</h1>
+        <p class="tag">
+          The URL <em>is</em> the program. Write commands in the path, share the link, and it runs —
+          answering in plain text like an API. No editor, no runtime to install, no snippet store.
+        </p>
+        <p class="byline">An experiment by Saurabh Gayali · MIT-spirited, self-hostable, ~one file of language.</p>
+      </header>
 
       <div class="cta">
-        <!-- TODO: point this at the live demo -->
-        <a class="btn primary" href="#" rel="noopener">Open the demo</a>
+        <a class="btn primary" href="https://url-code-play.lovable.app/help" rel="noopener">Open the demo</a>
+        <a class="btn" href="https://url-code-play.lovable.app/docs" rel="noopener">Docs &amp; samples</a>
+        <a class="btn" href="https://url-code-play.lovable.app/about" rel="noopener">About the project</a>
         <a class="btn" href="https://github.com/saurabhgayali/urlcodeplay">Source on GitHub</a>
       </div>
 
+      <h2>Try it in three seconds</h2>
       <pre>
-/set/x/10/add/x/20/print/x     ->  30
-/repeat/3/print/ha             ->  ha ha ha (one per line)
-/read/https://example.com      ->  the page, as raw text</pre
-      >
+/print/Hello%20World          <span class="c">-&gt;  Hello World</span>
+/set/x/10/add/x/20/print/x    <span class="c">-&gt;  30</span>
+/repeat/3/print/ha            <span class="c">-&gt;  ha, one per line</span>
+/read/https://example.com     <span class="c">-&gt;  the page, as raw text</span></pre>
+      <pre>
+<span class="c">$</span> curl https://url-code-play.lovable.app/set/n/6/multiply/n/7/print/n
+42</pre>
 
       <h2>Features</h2>
       <div class="grid">
         <div class="card">
           <h3>Programs live in the URL</h3>
-          <p>No database, no accounts, no saved state. A link is the whole artefact.</p>
+          <p>No database, no accounts, no saved state. The link is the entire artefact — paste it in chat, a ticket, or a README.</p>
         </div>
         <div class="card">
           <h3>Plain-text, API-style output</h3>
-          <p>Program URLs return text/plain — no HTML, no CSS, no client JavaScript.</p>
+          <p>Program URLs answer with <code>text/plain</code>: no HTML, no CSS, no client JavaScript, nothing to hydrate.</p>
+        </div>
+        <div class="card">
+          <h3>Server-side execution</h3>
+          <p>Programs are evaluated on the server, so output is identical in a browser, in curl, or inside a CI job.</p>
         </div>
         <div class="card">
           <h3>Variables and arithmetic</h3>
-          <p>set, add, subtract, multiply, divide — evaluated strictly left to right.</p>
+          <p><code>set</code>, <code>add</code>, <code>subtract</code>, <code>multiply</code>, <code>divide</code> — strict left-to-right evaluation, no hidden precedence.</p>
         </div>
         <div class="card">
           <h3>Repeat</h3>
-          <p>repeat/&lt;n&gt; runs the single command that follows it n times.</p>
+          <p><code>repeat/&lt;n&gt;</code> runs the single command that follows it n times — enough for tables, counters, and ramps.</p>
         </div>
         <div class="card">
           <h3>/read as a CORS bypasser</h3>
-          <p>
-            Fetches any public URL server-side and returns raw text, so cross-origin rules never get
-            in the way.
-          </p>
+          <p>Fetches any public URL server-side and returns raw text, so same-origin rules never block a feed, sitemap, or open JSON endpoint.</p>
         </div>
         <div class="card">
-          <h3>Piping</h3>
-          <p>A double slash ends the read URL; commands after it keep running and append output.</p>
+          <h3>Piping with //</h3>
+          <p>A double slash ends the read target; commands after it keep running and append their output beneath the fetched content.</p>
         </div>
         <div class="card">
           <h3>Domain policy</h3>
-          <p>
-            blacklist.json holds a whitelist and a blacklist; a non-empty whitelist locks reads to
-            those domains only.
-          </p>
+          <p><code>blacklist.json</code> holds a whitelist and a blacklist. A non-empty whitelist locks reads to those domains only.</p>
+        </div>
+        <div class="card">
+          <h3>Guard rails</h3>
+          <p>15-second fetch timeout, 512&nbsp;KB response cap with a truncation notice, and a step limit that stops runaway programs.</p>
+        </div>
+        <div class="card">
+          <h3>Inline error reporting</h3>
+          <p>Unknown commands, missing arguments, and division by zero are reported as readable text at the point they occur.</p>
+        </div>
+        <div class="card">
+          <h3>Browser playground</h3>
+          <p>The hosted app ships a dark terminal playground with a program field, generated URL, copy button, and clickable examples.</p>
         </div>
         <div class="card">
           <h3>curl friendly</h3>
-          <p>Works the same in a browser tab, a terminal, or a shell pipeline.</p>
+          <p>Works the same in a browser tab, a terminal, or a shell pipeline — pipe it into <code>grep</code>, <code>jq</code>, or a file.</p>
         </div>
       </div>
 
-      <footer>URL Code · by Saurabh Gayali</footer>
+      <h2>Command reference</h2>
+      <table>
+        <thead>
+          <tr><th>Command</th><th>Meaning</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>/print/&lt;text&gt;</td><td>Print literal text, or the value of a variable with that name.</td></tr>
+          <tr><td>/set/&lt;var&gt;/&lt;value&gt;</td><td>Assign a numeric or text value to a variable.</td></tr>
+          <tr><td>/add/&lt;var&gt;/&lt;value&gt;</td><td>Add a number, or another variable's value, to a variable.</td></tr>
+          <tr><td>/subtract/&lt;var&gt;/&lt;value&gt;</td><td>Subtract from a variable.</td></tr>
+          <tr><td>/multiply/&lt;var&gt;/&lt;value&gt;</td><td>Multiply a variable.</td></tr>
+          <tr><td>/divide/&lt;var&gt;/&lt;value&gt;</td><td>Divide a variable; dividing by zero is an inline error.</td></tr>
+          <tr><td>/repeat/&lt;n&gt;/&lt;command&gt;</td><td>Run the following single command n times.</td></tr>
+          <tr><td>/read/&lt;url&gt;</td><td>Fetch a public URL server-side and emit it as raw text.</td></tr>
+          <tr><td>/read/&lt;url&gt;//&lt;command&gt;</td><td>End the read target and continue the program after it.</td></tr>
+        </tbody>
+      </table>
+
+      <h2>Good for</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>Teaching</h3>
+          <p>Demonstrate evaluation order, URL encoding, and statelessness with links students can click and edit.</p>
+        </div>
+        <div class="card">
+          <h3>Quick fetching</h3>
+          <p>Read an RSS feed, <code>robots.txt</code>, or a public JSON endpoint as text from a page that would otherwise be CORS-blocked.</p>
+        </div>
+        <div class="card">
+          <h3>Throwaway endpoints</h3>
+          <p>Produce a deterministic text response for a health check, a demo, or a webhook stub — without deploying anything new.</p>
+        </div>
+      </div>
+
+      <h2>Run it yourself</h2>
+      <ol class="steps">
+        <li>Clone the repo: <code>git clone https://github.com/saurabhgayali/urlcodeplay</code></li>
+        <li>Install dependencies: <code>npm install</code></li>
+        <li>Start the dev server: <code>npm run dev</code>, then open <code>/help</code></li>
+        <li>Edit <code>blacklist.json</code> to tighten or open the <code>/read</code> domain policy</li>
+        <li>Deploy the app in <code>src/</code> to Vercel — this landing page is GitHub Pages only</li>
+      </ol>
+
+      <h2>FAQ</h2>
+      <details>
+        <summary>Is any of my code stored?</summary>
+        <p>No. There is no database, no account, and no logging of programs. The URL is the only place a program exists.</p>
+      </details>
+      <details>
+        <summary>Why does /read need a double slash?</summary>
+        <p>The scheme's own <code>//</code> is preserved, and the next double slash marks the end of the fetch target so the rest of the path can keep executing as commands.</p>
+      </details>
+      <details>
+        <summary>Can I read a private or authenticated URL?</summary>
+        <p>No. Reads send no cookies, credentials, or authorization headers, and are intended for public resources only.</p>
+      </details>
+      <details>
+        <summary>What happens on a blocked domain?</summary>
+        <p>The response body is simply <code>blacklisted</code> with HTTP 403. The same wording covers both a deny-list hit and a whitelist miss, so the configuration is never leaked.</p>
+      </details>
+
+      <footer>URL Code · by Saurabh Gayali · <a href="https://github.com/saurabhgayali/urlcodeplay">github.com/saurabhgayali/urlcodeplay</a></footer>
     </main>
   </body>
 </html>
