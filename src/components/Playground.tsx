@@ -4,8 +4,12 @@ import { runProgram, EXAMPLES, type OutputLine } from "@/lib/interpreter";
 
 function encodeProgram(input: string): string {
   const cleaned = input.trim().replace(/^https?:\/\/[^/]+/i, "");
-  const segments = cleaned.split("/").filter(Boolean);
-  return "/" + segments.map((s) => encodeURIComponent(decodeURIComponentSafe(s))).join("/");
+  // Keep empty segments: // is meaningful (URL schemes and the read terminator).
+  const encoded = cleaned
+    .split("/")
+    .map((s) => encodeURIComponent(decodeURIComponentSafe(s)))
+    .join("/");
+  return encoded.startsWith("/") ? encoded : "/" + encoded;
 }
 
 function decodeURIComponentSafe(s: string): string {
@@ -197,6 +201,7 @@ export function Playground({ program }: { program: string | null }) {
               ["/divide/<var>/<n>", "divide a variable by n"],
               ["/repeat/<n>/<command>", "run the next command n times"],
               ["/read/<url>", "fetch a url and show its raw text, like opening it in notepad"],
+              ["/read/<url>//<command>", "// ends the url — commands after it run next (piping)"],
             ].map(([cmd, desc]) => (
               <div key={cmd} className="flex flex-col gap-0.5">
                 <dt className="text-chart-2">{cmd}</dt>

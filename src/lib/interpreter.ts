@@ -156,4 +156,5 @@ export const EXAMPLES: { label: string; path: string }[] = [
   { label: "Repeat print", path: "/repeat/3/print/ha" },
   { label: "Repeat math", path: "/set/i/2/repeat/4/multiply/i/3/print/i" },
   { label: "Read a URL as text", path: "/read/example.com" },
+  { label: "Read, then pipe", path: "/read/example.com//print/--%20done%20--" },
 ];
