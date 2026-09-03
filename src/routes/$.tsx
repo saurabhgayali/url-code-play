@@ -85,34 +85,44 @@ export const Route = createFileRoute("/$")({
         const splat = (params as { _splat?: string })._splat ?? "";
         const segments = splat.split("/");
 
-        // /read/<url>//<commands...> — fetch a URL server-side and return its raw
-        // text. A double slash // ends the URL; anything after it runs as
-        // further commands, so reads can be piped into the program.
+        // /read/<url>;<commands...> — fetch a URL server-side and return its
+        // raw text. A semicolon ; ends the URL; anything after it runs as
+        // further commands, so reads can be piped into the program. Write the
+        // target without a scheme — https:// is added automatically. (Using ;
+        // instead of // because hosts like Vercel collapse double slashes.)
         if (segments[0] === "read") {
           const urlSegs: string[] = [];
           let i = 1;
+          let piped = false;
           for (; i < segments.length; i++) {
             const seg = segments[i];
             if (seg === undefined) break;
-            if (seg === "") {
-              const prev = urlSegs[urlSegs.length - 1];
-              // Keep the // of a scheme like https: — only a // after a
-              // non-scheme segment terminates the URL.
-              if (prev !== undefined && prev.endsWith(":")) {
-                urlSegs.push(seg);
-                continue;
-              }
-              i++;
+            const sc = seg.indexOf(";");
+            if (sc !== -1) {
+              const before = seg.slice(0, sc);
+              if (before) urlSegs.push(before);
+              const after = seg.slice(sc + 1);
+              segments[i] = after; // remainder of this segment starts the commands
+              piped = true;
               break;
             }
             urlSegs.push(seg);
           }
-          const rawTarget = urlSegs.join("/");
+          const rawTarget = urlSegs.filter((s) => s.length > 0).join("/");
           if (!rawTarget) {
-            return textResponse("read: expected a url, e.g. /read/example.com\n", 400);
+            return textResponse(
+              "read: expected a url, e.g. /read/example.com or /read/example.com;/print/done\n",
+              400,
+            );
+          }
+          if (/^https?:/i.test(decodeSafe(rawTarget))) {
+            return textResponse(
+              "read: do not include http:// or https:// — just the domain, e.g. /read/example.com\n",
+              400,
+            );
           }
           const { text: readText, status } = await fetchText(rawTarget);
-          const rest = segments.slice(i).filter(Boolean);
+          const rest = piped ? segments.slice(i).filter(Boolean) : [];
           if (rest.length === 0) return textResponse(readText, status);
           const output = runProgram(rest.map(decodeSafe).join("/"));
           const outText = output.map((line) => line.text).join("\n");
