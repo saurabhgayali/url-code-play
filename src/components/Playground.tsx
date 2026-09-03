@@ -17,7 +17,6 @@ function decodeURIComponentSafe(s: string): string {
 }
 
 export function Playground({ program }: { program: string | null }) {
-  const navigate = useNavigate();
   const [input, setInput] = useState(program ?? "");
   const [output, setOutput] = useState<OutputLine[]>([]);
   const [copied, setCopied] = useState(false);
@@ -48,9 +47,9 @@ export function Playground({ program }: { program: string | null }) {
       setRan(true);
       return;
     }
-    // Navigate via href so pre-encoded segments (%20 etc.) are kept verbatim —
+    // Full navigation keeps pre-encoded segments (%20 etc.) verbatim —
     // the URL is the source of truth.
-    navigate({ href: path } as never);
+    window.location.assign(path);
   };
 
   const copyUrl = async () => {
@@ -174,7 +173,7 @@ export function Playground({ program }: { program: string | null }) {
                 key={ex.path}
                 onClick={() => {
                   setInput(ex.path);
-                  navigate({ to: "/$", params: { _splat: ex.path.slice(1) } });
+                  window.location.assign(ex.path);
                 }}
                 className="rounded-md border border-border bg-card px-3 py-1.5 font-mono text-xs text-muted-foreground transition-colors hover:border-ring hover:text-foreground"
                 title={ex.path}
