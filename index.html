@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>URL Code — the URL is the program</title>
+    <meta
+      name="description"
+      content="URL Code turns a URL path into an executable program: print, variables, arithmetic, repeat, and /read for fetching any page as plain text without CORS."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="URL Code — the URL is the program" />
+    <meta
+      property="og:description"
+      content="Write a tiny program in the URL path, share the link, it runs. Plain-text, API-style output. No accounts, no database."
+    />
+    <meta name="twitter:card" content="summary" />
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #0d1117;
+        --card: #151b23;
+        --line: #262e38;
+        --fg: #e6edf3;
+        --mut: #97a3b1;
+        --acc: #7ee787;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--fg);
+        font: 16px/1.6 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      }
+      .wrap {
+        max-width: 820px;
+        margin: 0 auto;
+        padding: 56px 20px 64px;
+      }
+      code,
+      .mono {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      }
+      h1 {
+        font-size: 2rem;
+        margin: 0 0 8px;
+        letter-spacing: -0.02em;
+      }
+      .tag {
+        color: var(--mut);
+        margin: 0 0 24px;
+      }
+      .cta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 36px;
+      }
+      .btn {
+        display: inline-block;
+        padding: 10px 18px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: 0.9rem;
+        border: 1px solid var(--line);
+        color: var(--fg);
+        background: var(--card);
+      }
+      .btn.primary {
+        background: var(--acc);
+        color: #0d1117;
+        border-color: var(--acc);
+        font-weight: 600;
+      }
+      h2 {
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: var(--mut);
+        margin: 36px 0 14px;
+      }
+      .grid {
+        display: grid;
+        gap: 14px;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      }
+      .card {
+        border: 1px solid var(--line);
+        background: var(--card);
+        border-radius: 12px;
+        padding: 16px 18px;
+      }
+      .card h3 {
+        margin: 0 0 6px;
+        font-size: 0.95rem;
+      }
+      .card p {
+        margin: 0;
+        color: var(--mut);
+        font-size: 0.88rem;
+      }
+      pre {
+        background: #010409;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 16px;
+        overflow-x: auto;
+        font-size: 0.85rem;
+        color: var(--acc);
+      }
+      footer {
+        margin-top: 48px;
+        color: var(--mut);
+        font-size: 0.82rem;
+      }
+      a {
+        color: var(--acc);
+      }
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+      <h1>URL Code</h1>
+      <p class="tag">
+        The URL <em>is</em> the program. Write commands in the path, share the link, it runs — and
+        answers in plain text like an API.
+      </p>
+
+      <div class="cta">
+        <!-- TODO: point this at the live demo -->
+        <a class="btn primary" href="#" rel="noopener">Open the demo</a>
+        <a class="btn" href="https://github.com/saurabhgayali/urlcodeplay">Source on GitHub</a>
+      </div>
+
+      <pre>
+/set/x/10/add/x/20/print/x     ->  30
+/repeat/3/print/ha             ->  ha ha ha (one per line)
+/read/https://example.com      ->  the page, as raw text</pre
+      >
+
+      <h2>Features</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>Programs live in the URL</h3>
+          <p>No database, no accounts, no saved state. A link is the whole artefact.</p>
+        </div>
+        <div class="card">
+          <h3>Plain-text, API-style output</h3>
+          <p>Program URLs return text/plain — no HTML, no CSS, no client JavaScript.</p>
+        </div>
+        <div class="card">
+          <h3>Variables and arithmetic</h3>
+          <p>set, add, subtract, multiply, divide — evaluated strictly left to right.</p>
+        </div>
+        <div class="card">
+          <h3>Repeat</h3>
+          <p>repeat/&lt;n&gt; runs the single command that follows it n times.</p>
+        </div>
+        <div class="card">
+          <h3>/read as a CORS bypasser</h3>
+          <p>
+            Fetches any public URL server-side and returns raw text, so cross-origin rules never get
+            in the way.
+          </p>
+        </div>
+        <div class="card">
+          <h3>Piping</h3>
+          <p>A double slash ends the read URL; commands after it keep running and append output.</p>
+        </div>
+        <div class="card">
+          <h3>Domain policy</h3>
+          <p>
+            blacklist.json holds a whitelist and a blacklist; a non-empty whitelist locks reads to
+            those domains only.
+          </p>
+        </div>
+        <div class="card">
+          <h3>curl friendly</h3>
+          <p>Works the same in a browser tab, a terminal, or a shell pipeline.</p>
+        </div>
+      </div>
+
+      <footer>URL Code · by Saurabh Gayali</footer>
+    </main>
+  </body>
+</html>

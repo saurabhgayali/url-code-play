@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SplatRouteImport } from './routes/$'
+import { Route as AboutRouteImport } from './routes/about'
 import { Route as DocRouteImport } from './routes/doc'
 import { Route as DocsRouteImport } from './routes/docs'
 import { Route as HelpRouteImport } from './routes/help'
@@ -23,6 +24,11 @@ const IndexRoute = IndexRouteImport.update({
 const SplatRoute = SplatRouteImport.update({
   id: '/$',
   path: '/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DocRoute = DocRouteImport.update({
@@ -44,6 +50,7 @@ const HelpRoute = HelpRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
+  '/about': typeof AboutRoute
   '/doc': typeof DocRoute
   '/docs': typeof DocsRoute
   '/help': typeof HelpRoute
@@ -51,6 +58,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
+  '/about': typeof AboutRoute
   '/doc': typeof DocRoute
   '/docs': typeof DocsRoute
   '/help': typeof HelpRoute
@@ -59,21 +67,23 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
+  '/about': typeof AboutRoute
   '/doc': typeof DocRoute
   '/docs': typeof DocsRoute
   '/help': typeof HelpRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/$' | '/doc' | '/docs' | '/help'
+  fullPaths: '/' | '/$' | '/about' | '/doc' | '/docs' | '/help'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/$' | '/doc' | '/docs' | '/help'
-  id: '__root__' | '/' | '/$' | '/doc' | '/docs' | '/help'
+  to: '/' | '/$' | '/about' | '/doc' | '/docs' | '/help'
+  id: '__root__' | '/' | '/$' | '/about' | '/doc' | '/docs' | '/help'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SplatRoute: typeof SplatRoute
+  AboutRoute: typeof AboutRoute
   DocRoute: typeof DocRoute
   DocsRoute: typeof DocsRoute
   HelpRoute: typeof HelpRoute
@@ -93,6 +103,13 @@ declare module '@tanstack/react-router' {
       path: '/$'
       fullPath: '/$'
       preLoaderRoute: typeof SplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/doc': {
@@ -122,6 +139,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SplatRoute: SplatRoute,
+  AboutRoute: AboutRoute,
   DocRoute: DocRoute,
   DocsRoute: DocsRoute,
   HelpRoute: HelpRoute,
