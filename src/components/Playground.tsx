@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "@tanstack/react-router";
 import { Copy, Play, Check, Terminal, Braces } from "lucide-react";
 import { runProgram, EXAMPLES, type OutputLine } from "@/lib/interpreter";
 
