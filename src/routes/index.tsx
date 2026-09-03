@@ -1,24 +1,28 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Playground } from "@/components/Playground";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
 export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: "URL Code — the URL is the program" },
+      {
+        name: "description",
+        content:
+          "Write tiny programs in the URL path. /set/x/10/add/x/20/print/x runs in your browser and prints 30. Share the link, share the program.",
+      },
+      { property: "og:title", content: "URL Code — the URL is the program" },
+      {
+        property: "og:description",
+        content:
+          "Write tiny programs in the URL path. Share the link and it executes in the browser. No servers, no storage.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+    ],
+  }),
   component: Index,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
 function Index() {
-  return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
-  );
+  return <Playground program={null} />;
 }
