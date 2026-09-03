@@ -200,8 +200,8 @@ export function Playground({ program }: { program: string | null }) {
               ["/multiply/<var>/<n>", "multiply a variable by n"],
               ["/divide/<var>/<n>", "divide a variable by n"],
               ["/repeat/<n>/<command>", "run the next command n times"],
-              ["/read/<url>", "fetch a url and show its raw text, like opening it in notepad"],
-              ["/read/<url>//<command>", "// ends the url — commands after it run next (piping)"],
+              ["/read/<url>", "fetch a url (no https:// needed) and show its raw text"],
+              ["/read/<url>;<command>", "; ends the url — commands after it run next (piping)"],
             ].map(([cmd, desc]) => (
               <div key={cmd} className="flex flex-col gap-0.5">
                 <dt className="text-chart-2">{cmd}</dt>
