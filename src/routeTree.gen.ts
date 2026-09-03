@@ -11,6 +11,8 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SplatRouteImport } from './routes/$'
+import { Route as DocRouteImport } from './routes/doc'
+import { Route as DocsRouteImport } from './routes/docs'
 import { Route as HelpRouteImport } from './routes/help'
 
 const IndexRoute = IndexRouteImport.update({
@@ -23,6 +25,16 @@ const SplatRoute = SplatRouteImport.update({
   path: '/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DocRoute = DocRouteImport.update({
+  id: '/doc',
+  path: '/doc',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DocsRoute = DocsRouteImport.update({
+  id: '/docs',
+  path: '/docs',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HelpRoute = HelpRouteImport.update({
   id: '/help',
   path: '/help',
@@ -32,30 +44,38 @@ const HelpRoute = HelpRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
+  '/doc': typeof DocRoute
+  '/docs': typeof DocsRoute
   '/help': typeof HelpRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
+  '/doc': typeof DocRoute
+  '/docs': typeof DocsRoute
   '/help': typeof HelpRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
+  '/doc': typeof DocRoute
+  '/docs': typeof DocsRoute
   '/help': typeof HelpRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/$' | '/help'
+  fullPaths: '/' | '/$' | '/doc' | '/docs' | '/help'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/$' | '/help'
-  id: '__root__' | '/' | '/$' | '/help'
+  to: '/' | '/$' | '/doc' | '/docs' | '/help'
+  id: '__root__' | '/' | '/$' | '/doc' | '/docs' | '/help'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SplatRoute: typeof SplatRoute
+  DocRoute: typeof DocRoute
+  DocsRoute: typeof DocsRoute
   HelpRoute: typeof HelpRoute
 }
 
@@ -75,6 +95,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/doc': {
+      id: '/doc'
+      path: '/doc'
+      fullPath: '/doc'
+      preLoaderRoute: typeof DocRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/docs': {
+      id: '/docs'
+      path: '/docs'
+      fullPath: '/docs'
+      preLoaderRoute: typeof DocsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/help': {
       id: '/help'
       path: '/help'
@@ -88,6 +122,8 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SplatRoute: SplatRoute,
+  DocRoute: DocRoute,
+  DocsRoute: DocsRoute,
   HelpRoute: HelpRoute,
 }
 export const routeTree = rootRouteImport
