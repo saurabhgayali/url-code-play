@@ -37,7 +37,7 @@ async function fetchText(rawTarget: string): Promise<{ text: string; status: num
       return { text: `read: ${url} responded with ${res.status}\n`, status: 502 };
     }
     const reader = res.body?.getReader();
-    if (!reader) return textResponse("", 200);
+    if (!reader) return { text: "", status: 200 };
     const chunks: Uint8Array[] = [];
     let total = 0;
     let truncated = false;
@@ -66,9 +66,9 @@ async function fetchText(rawTarget: string): Promise<{ text: string; status: num
             return merged;
           })(),
     );
-    return textResponse(truncated ? text + "\n[truncated at 512 KB]\n" : text, 200);
+    return { text: truncated ? text + "\n[truncated at 512 KB]\n" : text, status: 200 };
   } catch (e) {
-    return textResponse(`read: failed to fetch ${url} (${(e as Error).message})\n`, 502);
+    return { text: `read: failed to fetch ${url} (${(e as Error).message})\n`, status: 502 };
   }
 }
 
@@ -77,12 +77,39 @@ export const Route = createFileRoute("/$")({
     handlers: {
       GET: async ({ params }) => {
         const splat = (params as { _splat?: string })._splat ?? "";
+        const segments = splat.split("/");
 
-        // /read/<url> — fetch a URL server-side and return its raw text.
-        if (splat === "read" || splat.startsWith("read/")) {
-          const rawTarget = splat.slice("read/".length);
-          if (!rawTarget) return textResponse("read: expected a url, e.g. /read/example.com\n", 400);
-          return handleRead(rawTarget);
+        // /read/<url>//<commands...> — fetch a URL server-side and return its raw
+        // text. A double slash // ends the URL; anything after it runs as
+        // further commands, so reads can be piped into the program.
+        if (segments[0] === "read") {
+          const urlSegs: string[] = [];
+          let i = 1;
+          for (; i < segments.length; i++) {
+            const seg = segments[i];
+            if (seg === "") {
+              const prev = urlSegs[urlSegs.length - 1];
+              // Keep the // of a scheme like https: — only a // after a
+              // non-scheme segment terminates the URL.
+              if (prev !== undefined && prev.endsWith(":")) {
+                urlSegs.push(seg);
+                continue;
+              }
+              i++;
+              break;
+            }
+            urlSegs.push(seg);
+          }
+          const rawTarget = urlSegs.join("/");
+          if (!rawTarget) {
+            return textResponse("read: expected a url, e.g. /read/example.com\n", 400);
+          }
+          const { text: readText, status } = await fetchText(rawTarget);
+          const rest = segments.slice(i).filter(Boolean);
+          if (rest.length === 0) return textResponse(readText, status);
+          const output = runProgram(rest.map(decodeSafe).join("/"));
+          const outText = output.map((line) => line.text).join("\n");
+          return textResponse(readText + (outText ? outText + "\n" : ""));
         }
 
         const output = runProgram(splat);
