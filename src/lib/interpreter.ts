@@ -40,21 +40,27 @@ export function tokenize(input: string): string[] {
 
 function parseOne(tokens: string[], i: number): { cmd: Command; next: number } {
   const op = tokens[i];
+  if (op === undefined) throw new Error("unexpected end of program");
   if (op === "repeat") {
-    const count = Number(tokens[i + 1]);
-    if (!Number.isFinite(count) || count < 0) {
-      throw new Error(`repeat: invalid count "${tokens[i + 1]}"`);
+    const rawCount = tokens[i + 1];
+    const count = Number(rawCount);
+    if (rawCount === undefined || !Number.isFinite(count) || count < 0) {
+      throw new Error(`repeat: invalid count "${rawCount ?? ""}"`);
     }
     const inner = parseOne(tokens, i + 2);
     return { cmd: { op: "repeat", count: Math.floor(count), body: inner.cmd }, next: inner.next };
   }
   const arity = ARITY[op];
   if (arity === undefined) throw new Error(`unknown command "${op}"`);
-  const args = tokens.slice(i + 1, i + 1 + arity);
-  if (args.length < arity) throw new Error(`${op}: expected ${arity} argument(s)`);
-  if (op === "print") return { cmd: { op, text: args[0] }, next: i + 2 };
-  if (op === "set") return { cmd: { op, name: args[0], value: args[1] }, next: i + 3 };
-  return { cmd: { op, name: args[0], value: args[1] }, next: i + 3 };
+  const a = tokens[i + 1];
+  const b = tokens[i + 2];
+  if (a === undefined || (arity > 1 && b === undefined)) {
+    throw new Error(`${op}: expected ${arity} argument(s)`);
+  }
+  if (op === "print") return { cmd: { op, text: a }, next: i + 2 };
+  const arg2 = b as string;
+  if (op === "set") return { cmd: { op, name: a, value: arg2 }, next: i + 3 };
+  return { cmd: { op, name: a, value: arg2 }, next: i + 3 };
 }
 
 export function runProgram(input: string, maxSteps = 10000): OutputLine[] {
