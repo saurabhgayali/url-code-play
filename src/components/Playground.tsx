@@ -4,7 +4,7 @@ import { runProgram, EXAMPLES, type OutputLine } from "@/lib/interpreter";
 
 function encodeProgram(input: string): string {
   const cleaned = input.trim().replace(/^https?:\/\/[^/]+/i, "");
-  // Keep empty segments: // is meaningful (URL schemes and the read terminator).
+  // Keep segments verbatim; ; terminates a /read target for piping.
   const encoded = cleaned
     .split("/")
     .map((s) => encodeURIComponent(decodeURIComponentSafe(s)))
