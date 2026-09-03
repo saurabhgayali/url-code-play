@@ -18,13 +18,13 @@ function textResponse(text: string, status = 200): Response {
   });
 }
 
-async function handleRead(rawTarget: string): Promise<Response> {
+async function fetchText(rawTarget: string): Promise<{ text: string; status: number }> {
   const target = decodeSafe(rawTarget);
   let url: URL;
   try {
     url = new URL(/^https?:\/\//i.test(target) ? target : `https://${target}`);
   } catch {
-    return textResponse(`read: invalid url "${target}"\n`, 400);
+    return { text: `read: invalid url "${target}"\n`, status: 400 };
   }
 
   try {
@@ -34,7 +34,7 @@ async function handleRead(rawTarget: string): Promise<Response> {
       signal: AbortSignal.timeout(15000),
     });
     if (!res.ok) {
-      return textResponse(`read: ${url} responded with ${res.status}\n`, 502);
+      return { text: `read: ${url} responded with ${res.status}\n`, status: 502 };
     }
     const reader = res.body?.getReader();
     if (!reader) return textResponse("", 200);
