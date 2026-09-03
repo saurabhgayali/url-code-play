@@ -147,5 +147,5 @@ export const EXAMPLES: { label: string; path: string }[] = [
   { label: "Add to a variable", path: "/set/x/10/add/x/20/print/x" },
   { label: "Multiply", path: "/set/n/6/multiply/n/7/print/n" },
   { label: "Repeat print", path: "/repeat/3/print/ha" },
-  { label: "Countdown", path: "/set/i/10/repeat/10/print/i/subtract/i/1" },
+  { label: "Repeat math", path: "/set/i/2/repeat/4/multiply/i/3/print/i" },
 ];
