@@ -110,7 +110,9 @@ export const Route = createFileRoute("/$")({
           if (rest.length === 0) return textResponse(readText, status);
           const output = runProgram(rest.map(decodeSafe).join("/"));
           const outText = output.map((line) => line.text).join("\n");
-          return textResponse(readText + (outText ? outText + "\n" : ""));
+          if (!outText) return textResponse(readText);
+          const sep = readText.endsWith("\n") || !readText ? "" : "\n";
+          return textResponse(readText + sep + outText + "\n");
         }
 
         const output = runProgram(splat);
