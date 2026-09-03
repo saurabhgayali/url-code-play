@@ -60,7 +60,8 @@ function parseOne(tokens: string[], i: number): { cmd: Command; next: number } {
   if (op === "print") return { cmd: { op, text: a }, next: i + 2 };
   const arg2 = b as string;
   if (op === "set") return { cmd: { op, name: a, value: arg2 }, next: i + 3 };
-  return { cmd: { op, name: a, value: arg2 }, next: i + 3 };
+  const arithOp = op as "add" | "subtract" | "multiply" | "divide";
+  return { cmd: { op: arithOp, name: a, value: arg2 }, next: i + 3 };
 }
 
 export function runProgram(input: string, maxSteps = 10000): OutputLine[] {

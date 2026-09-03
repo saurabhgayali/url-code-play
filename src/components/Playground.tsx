@@ -49,7 +49,9 @@ export function Playground({ program }: { program: string | null }) {
       setRan(true);
       return;
     }
-    navigate({ to: "/$", params: { _splat: path.slice(1) } });
+    // Navigate via href so pre-encoded segments (%20 etc.) are kept verbatim —
+    // the URL is the source of truth.
+    navigate({ href: path } as never);
   };
 
   const copyUrl = async () => {
