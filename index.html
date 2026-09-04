@@ -1,224 +1,779 @@
-<!doctype html>
+<!DOCTYPE html>
+
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>URL Code — write programs in the URL path</title>
-    <meta
-      name="description"
-      content="URL Code is a tiny URL-native language: print, variables, arithmetic, repeat, piping, and /read for fetching any page as plain text without CORS. Feature overview and live demo."
-    />
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content="URL Code — write programs in the URL path" />
-    <meta
-      property="og:description"
-      content="A link is the whole program. Plain-text, API-style output. No accounts, no database, no client JavaScript."
-    />
-    <meta name="twitter:card" content="summary" />
-    <link rel="canonical" href="https://saurabhgayali.github.io/urlcodeplay/" />
-    <style>
-      :root {
-        color-scheme: dark;
-        --bg: #0d1117;
-        --card: #151b23;
-        --line: #262e38;
-        --fg: #e6edf3;
-        --mut: #97a3b1;
-        --acc: #7ee787;
-        --acc2: #79c0ff;
-      }
-      * { box-sizing: border-box; }
-      body {
-        margin: 0;
-        background: var(--bg);
-        color: var(--fg);
-        font: 16px/1.65 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-      }
-      .wrap { max-width: 900px; margin: 0 auto; padding: 56px 20px 72px; }
-      code, .mono, pre, table { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
-      h1 { font-size: 2.2rem; margin: 0 0 10px; letter-spacing: -0.02em; }
-      .tag { color: var(--mut); margin: 0 0 10px; max-width: 62ch; }
-      .byline { color: var(--mut); font-size: 0.85rem; margin: 0 0 26px; }
-      .cta { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 34px; }
-      .btn {
-        display: inline-block; padding: 10px 18px; border-radius: 8px; text-decoration: none;
-        font-size: 0.9rem; border: 1px solid var(--line); color: var(--fg); background: var(--card);
-      }
-      .btn:hover { border-color: var(--acc); }
-      .btn.primary { background: var(--acc); color: #0d1117; border-color: var(--acc); font-weight: 600; }
-      h2 {
-        font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.12em;
-        color: var(--mut); margin: 44px 0 14px;
-      }
-      .grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
-      .card { border: 1px solid var(--line); background: var(--card); border-radius: 12px; padding: 16px 18px; }
-      .card h3 { margin: 0 0 6px; font-size: 0.95rem; }
-      .card p { margin: 0; color: var(--mut); font-size: 0.88rem; }
-      pre {
-        background: #010409; border: 1px solid var(--line); border-radius: 12px; padding: 16px;
-        overflow-x: auto; font-size: 0.85rem; color: var(--acc); margin: 0 0 14px;
-      }
-      pre .c { color: var(--mut); }
-      table { width: 100%; border-collapse: collapse; font-size: 0.84rem; }
-      th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
-      th { color: var(--mut); font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.7rem; }
-      td:first-child { color: var(--acc2); white-space: nowrap; }
-      td:last-child { color: var(--mut); }
-      ol.steps { color: var(--mut); font-size: 0.9rem; padding-left: 20px; }
-      ol.steps code { color: var(--acc); }
-      details {
-        border: 1px solid var(--line); background: var(--card); border-radius: 10px;
-        padding: 12px 16px; margin-bottom: 10px;
-      }
-      summary { cursor: pointer; font-size: 0.92rem; }
-      details p { color: var(--mut); font-size: 0.88rem; margin: 10px 0 0; }
-      footer { margin-top: 52px; padding-top: 18px; border-top: 1px solid var(--line); color: var(--mut); font-size: 0.82rem; }
-      a { color: var(--acc); }
-    </style>
-  </head>
-  <body>
-    <main class="wrap">
-      <header>
-        <h1>URL Code</h1>
-        <p class="tag">
-          The URL <em>is</em> the program. Write commands in the path, share the link, and it runs —
-          answering in plain text like an API. No editor, no runtime to install, no snippet store.
-        </p>
-        <p class="byline">An experiment by Saurabh Gayali · MIT-spirited, self-hostable, ~one file of language.</p>
-      </header>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-      <div class="cta">
-        <a class="btn primary" href="https://url-code-play.lovable.app/help" rel="noopener">Open the demo</a>
-        <a class="btn" href="https://url-code-play.lovable.app/docs" rel="noopener">Docs &amp; samples</a>
-        <a class="btn" href="https://url-code-play.lovable.app/about" rel="noopener">About the project</a>
-        <a class="btn" href="https://github.com/saurabhgayali/url-code-play">Source on GitHub</a>
+  <title>URL Code Play — The URL is the program</title>
+
+<meta
+name="description"
+content="URL Code is a tiny programming language where the URL itself is the program."
+
+>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background: #0b0d10;
+      color: #e7e9ec;
+      font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+      line-height: 1.6;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .container {
+      width: min(1050px, calc(100% - 40px));
+      margin: auto;
+    }
+
+    header {
+      border-bottom: 1px solid #24282e;
+    }
+
+    nav {
+      min-height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .logo {
+      font-weight: 700;
+      letter-spacing: -0.03em;
+    }
+
+    nav .links {
+      display: flex;
+      gap: 20px;
+    }
+
+    nav a {
+      color: #9299a2;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    nav a:hover {
+      color: #fff;
+    }
+
+    .hero {
+      padding: 95px 0 70px;
+      text-align: center;
+    }
+
+    .eyebrow {
+      color: #8ab4f8;
+      font: 14px monospace;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(46px, 8vw, 82px);
+      line-height: .95;
+      letter-spacing: -0.065em;
+    }
+
+    .hero p {
+      max-width: 680px;
+      margin: 28px auto 38px;
+      color: #a5abb3;
+      font-size: 19px;
+    }
+
+    .hero-actions {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 10px 17px;
+      border-radius: 6px;
+      border: 1px solid #30353c;
+      background: #15181d;
+      color: #e7e9ec;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .button:hover {
+      background: #1c2026;
+    }
+
+    .button.primary {
+      background: #e7e9ec;
+      color: #0b0d10;
+      border-color: #e7e9ec;
+    }
+
+    .section {
+      padding: 70px 0;
+      border-top: 1px solid #20242a;
+    }
+
+    h2 {
+      margin: 0 0 10px;
+      font-size: 32px;
+      letter-spacing: -0.04em;
+    }
+
+    .intro {
+      margin: 0 0 30px;
+      color: #9098a1;
+    }
+
+    .demo {
+      border: 1px solid #292e35;
+      border-radius: 9px;
+      overflow: hidden;
+      background: #111419;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, .3);
+    }
+
+    .demo-top {
+      padding: 11px 15px;
+      border-bottom: 1px solid #292e35;
+      color: #747c86;
+      font: 12px monospace;
+    }
+
+    .program {
+      padding: 22px;
+      overflow-x: auto;
+      white-space: nowrap;
+      font: 14px monospace;
+      color: #dce0e5;
+    }
+
+    .program .command {
+      color: #8ab4f8;
+    }
+
+    .output {
+      padding: 20px 22px;
+      border-top: 1px solid #292e35;
+      background: #080a0d;
+      font: 14px/1.7 monospace;
+    }
+
+    .output-label {
+      color: #666e78;
+      margin-bottom: 7px;
+    }
+
+    .output-text {
+      color: #dfe3e8;
+    }
+
+    .examples {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+    }
+
+    .example {
+      padding: 20px;
+      border: 1px solid #292e35;
+      border-radius: 8px;
+      background: #111419;
+    }
+
+    .example h3 {
+      margin: 0 0 7px;
+      font-size: 17px;
+    }
+
+    .example p {
+      margin: 0 0 16px;
+      color: #858d97;
+      font-size: 14px;
+    }
+
+    .code {
+      display: block;
+      padding: 13px;
+      margin-bottom: 15px;
+      border-radius: 5px;
+      background: #080a0d;
+      border: 1px solid #252a30;
+      color: #cdd2d8;
+      font: 12px/1.6 monospace;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+
+    .run {
+      display: inline-block;
+      padding: 7px 12px;
+      border-radius: 5px;
+      border: 1px solid #343a42;
+      background: #181c21;
+      color: #dce0e5;
+      text-decoration: none;
+      font-size: 13px;
+    }
+
+    .run:hover {
+      background: #22272e;
+    }
+
+    .big-example {
+      margin-top: 20px;
+    }
+
+    .big-example .code {
+      font-size: 14px;
+      padding: 18px;
+    }
+
+    .concept-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 45px;
+      align-items: start;
+    }
+
+    .concept p {
+      color: #9da4ad;
+    }
+
+    pre {
+      margin: 0;
+      padding: 20px;
+      border-radius: 8px;
+      border: 1px solid #292e35;
+      background: #080a0d;
+      overflow-x: auto;
+      font: 13px/1.8 monospace;
+    }
+
+    .command-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 25px;
+      font-size: 14px;
+    }
+
+    .command-table th,
+    .command-table td {
+      padding: 13px 12px;
+      text-align: left;
+      border-bottom: 1px solid #252a30;
+    }
+
+    .command-table th {
+      color: #858d96;
+      font-weight: 500;
+    }
+
+    .command-table td:first-child,
+    .command-table td:nth-child(2) {
+      font-family: monospace;
+    }
+
+    footer {
+      padding: 35px 0;
+      border-top: 1px solid #20242a;
+      color: #6f7781;
+      font-size: 13px;
+    }
+
+    footer .footer-links {
+      display: flex;
+      gap: 18px;
+      margin-top: 8px;
+    }
+
+    footer a {
+      color: #9299a2;
+      text-decoration: none;
+    }
+
+    @media (max-width: 720px) {
+      .examples,
+      .concept-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 65px;
+      }
+
+      nav .links {
+        gap: 10px;
+      }
+
+      nav a {
+        font-size: 12px;
+      }
+    }
+  </style>
+
+</head>
+
+<body>
+
+<header>
+  <div class="container">
+    <nav>
+      <div class="logo">URL Code Play</div>
+
+```
+  <div class="links">
+    <a href="https://urlcodeplay.vercel.app/docs">Docs</a>
+    <a href="https://urlcodeplay.vercel.app/about">About</a>
+    <a href="https://github.com/saurabhgayali/url-code-play">GitHub</a>
+  </div>
+</nav>
+```
+
+  </div>
+</header>
+
+<main>
+
+  <section class="hero">
+    <div class="container">
+
+```
+  <div class="eyebrow">URL-native programming</div>
+
+  <h1>The URL is<br>the program.</h1>
+
+  <p>
+    A tiny programming language where the source code,
+    executable program and shareable link are the same thing.
+  </p>
+
+  <div class="hero-actions">
+    <a class="button primary"
+       href="https://urlcodeplay.vercel.app/r/repeat/5/print/Hello;repeat/5/print/World">
+      Run an example
+    </a>
+
+    <a class="button"
+       href="https://urlcodeplay.vercel.app/docs">
+      Read the docs
+    </a>
+  </div>
+
+</div>
+```
+
+  </section>
+
+  <section class="section">
+    <div class="container">
+
+```
+  <h2>See it happen</h2>
+
+  <p class="intro">
+    This entire program is encoded in the URL.
+  </p>
+
+  <div class="demo">
+
+    <div class="demo-top">
+      urlcodeplay.vercel.app
+    </div>
+
+    <div class="program">
+      /r/<span class="command">repeat/5/print/Hello;repeat/5/print/World</span>
+    </div>
+
+    <div class="output">
+
+      <div class="output-label">output</div>
+
+      <div class="output-text">
+        Hello<br>
+        Hello<br>
+        Hello<br>
+        Hello<br>
+        Hello<br>
+        World<br>
+        World<br>
+        World<br>
+        World<br>
+        World
       </div>
 
-      <h2>Try it in three seconds</h2>
-      <pre>
-/print/Hello%20World          <span class="c">-&gt;  Hello World</span>
-/set/x/10/add/x/20/print/x    <span class="c">-&gt;  30</span>
-/repeat/3/print/ha            <span class="c">-&gt;  ha, one per line</span>
-/read/example.com             <span class="c">-&gt;  the page, as raw text</span>
-/read/example.com;/print/done <span class="c">-&gt;  the page, then "done"</span></pre>
-      <pre>
-<span class="c">$</span> curl https://url-code-play.lovable.app/set/n/6/multiply/n/7/print/n
-42</pre>
+    </div>
 
-      <h2>Features</h2>
-      <div class="grid">
-        <div class="card">
-          <h3>Programs live in the URL</h3>
-          <p>No database, no accounts, no saved state. The link is the entire artefact — paste it in chat, a ticket, or a README.</p>
-        </div>
-        <div class="card">
-          <h3>Plain-text, API-style output</h3>
-          <p>Program URLs answer with <code>text/plain</code>: no HTML, no CSS, no client JavaScript, nothing to hydrate.</p>
-        </div>
-        <div class="card">
-          <h3>Server-side execution</h3>
-          <p>Programs are evaluated on the server, so output is identical in a browser, in curl, or inside a CI job.</p>
-        </div>
-        <div class="card">
-          <h3>Variables and arithmetic</h3>
-          <p><code>set</code>, <code>add</code>, <code>subtract</code>, <code>multiply</code>, <code>divide</code> — strict left-to-right evaluation, no hidden precedence.</p>
-        </div>
-        <div class="card">
-          <h3>Repeat</h3>
-          <p><code>repeat/&lt;n&gt;</code> runs the single command that follows it n times — enough for tables, counters, and ramps.</p>
-        </div>
-        <div class="card">
-          <h3>/read as a CORS bypasser</h3>
-          <p>Fetches any public URL server-side and returns raw text, so same-origin rules never block a feed, sitemap, or open JSON endpoint.</p>
-        </div>
-        <div class="card">
-          <h3>Piping with //</h3>
-          <p>A double slash ends the read target; commands after it keep running and append their output beneath the fetched content.</p>
-        </div>
-        <div class="card">
-          <h3>Domain policy</h3>
-          <p><code>blacklist.json</code> holds a whitelist and a blacklist. A non-empty whitelist locks reads to those domains only.</p>
-        </div>
-        <div class="card">
-          <h3>Guard rails</h3>
-          <p>15-second fetch timeout, 512&nbsp;KB response cap with a truncation notice, and a step limit that stops runaway programs.</p>
-        </div>
-        <div class="card">
-          <h3>Inline error reporting</h3>
-          <p>Unknown commands, missing arguments, and division by zero are reported as readable text at the point they occur.</p>
-        </div>
-        <div class="card">
-          <h3>Browser playground</h3>
-          <p>The hosted app ships a dark terminal playground with a program field, generated URL, copy button, and clickable examples.</p>
-        </div>
-        <div class="card">
-          <h3>curl friendly</h3>
-          <p>Works the same in a browser tab, a terminal, or a shell pipeline — pipe it into <code>grep</code>, <code>jq</code>, or a file.</p>
-        </div>
+  </div>
+
+</div>
+```
+
+  </section>
+
+  <section class="section">
+    <div class="container">
+
+```
+  <h2>Try programs</h2>
+
+  <p class="intro">
+    Every example below is a real, executable URL.
+  </p>
+
+  <div class="examples">
+
+
+    <div class="example">
+
+      <h3>Hello World</h3>
+
+      <p>The smallest useful program.</p>
+
+      <div class="code">
+        /r/print/Hello%20World
       </div>
 
-      <h2>Command reference</h2>
-      <table>
-        <thead>
-          <tr><th>Command</th><th>Meaning</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>/print/&lt;text&gt;</td><td>Print literal text, or the value of a variable with that name.</td></tr>
-          <tr><td>/set/&lt;var&gt;/&lt;value&gt;</td><td>Assign a numeric or text value to a variable.</td></tr>
-          <tr><td>/add/&lt;var&gt;/&lt;value&gt;</td><td>Add a number, or another variable's value, to a variable.</td></tr>
-          <tr><td>/subtract/&lt;var&gt;/&lt;value&gt;</td><td>Subtract from a variable.</td></tr>
-          <tr><td>/multiply/&lt;var&gt;/&lt;value&gt;</td><td>Multiply a variable.</td></tr>
-          <tr><td>/divide/&lt;var&gt;/&lt;value&gt;</td><td>Divide a variable; dividing by zero is an inline error.</td></tr>
-          <tr><td>/repeat/&lt;n&gt;/&lt;command&gt;</td><td>Run the following single command n times.</td></tr>
-          <tr><td>/read/&lt;url&gt;</td><td>Fetch a public URL server-side and emit it as raw text. No https:// needed — just the domain.</td></tr>
-          <tr><td>/read/&lt;url&gt;;&lt;command&gt;</td><td>A semicolon ends the read target and the program continues after it.</td></tr>
-        </tbody>
-      </table>
+      <a class="run"
+         href="https://urlcodeplay.vercel.app/r/print/Hello%20World">
+        Run →
+      </a>
 
-      <h2>Good for</h2>
-      <div class="grid">
-        <div class="card">
-          <h3>Teaching</h3>
-          <p>Demonstrate evaluation order, URL encoding, and statelessness with links students can click and edit.</p>
-        </div>
-        <div class="card">
-          <h3>Quick fetching</h3>
-          <p>Read an RSS feed, <code>robots.txt</code>, or a public JSON endpoint as text from a page that would otherwise be CORS-blocked.</p>
-        </div>
-        <div class="card">
-          <h3>Throwaway endpoints</h3>
-          <p>Produce a deterministic text response for a health check, a demo, or a webhook stub — without deploying anything new.</p>
-        </div>
+    </div>
+
+
+    <div class="example">
+
+      <h3>Calculate</h3>
+
+      <p>Variables and arithmetic composed together.</p>
+
+      <div class="code">
+        /r/set/x/10;add/x/20;multiply/x/3;print/x
       </div>
 
-      <h2>Run it yourself</h2>
-      <ol class="steps">
-        <li>Clone the repo: <code>git clone https://github.com/saurabhgayali/url-code-play</code></li>
-        <li>Install dependencies: <code>npm install</code></li>
-        <li>Start the dev server: <code>npm run dev</code>, then open <code>/help</code></li>
-        <li>Edit <code>blacklist.json</code> to tighten or open the <code>/read</code> domain policy</li>
-        <li>Deploy the app in <code>src/</code> to Vercel — this landing page is GitHub Pages only</li>
-      </ol>
+      <a class="run"
+         href="https://urlcodeplay.vercel.app/r/set/x/10;add/x/20;multiply/x/3;print/x">
+        Run →
+      </a>
 
-      <h2>FAQ</h2>
-      <details>
-        <summary>Is any of my code stored?</summary>
-        <p>No. There is no database, no account, and no logging of programs. The URL is the only place a program exists.</p>
-      </details>
-      <details>
-        <summary>Why does /read need a double slash?</summary>
-        <p>The scheme's own <code>//</code> is preserved, and the next double slash marks the end of the fetch target so the rest of the path can keep executing as commands.</p>
-      </details>
-      <details>
-        <summary>Can I read a private or authenticated URL?</summary>
-        <p>No. Reads send no cookies, credentials, or authorization headers, and are intended for public resources only.</p>
-      </details>
-      <details>
-        <summary>What happens on a blocked domain?</summary>
-        <p>The response body is simply <code>blacklisted</code> with HTTP 403. The same wording covers both a deny-list hit and a whitelist miss, so the configuration is never leaked.</p>
-      </details>
+    </div>
 
-      <footer>URL Code · by Saurabh Gayali · <a href="https://github.com/saurabhgayali/url-code-play">github.com/saurabhgayali/url-code-play</a></footer>
-    </main>
-  </body>
+
+    <div class="example">
+
+      <h3>Repeat</h3>
+
+      <p>Run a command multiple times.</p>
+
+      <div class="code">
+        /r/repeat/5/print/Hello
+      </div>
+
+      <a class="run"
+         href="https://urlcodeplay.vercel.app/r/repeat/5/print/Hello">
+        Run →
+      </a>
+
+    </div>
+
+
+    <div class="example">
+
+      <h3>Two pipelines</h3>
+
+      <p>Five Hellos followed by five Worlds.</p>
+
+      <div class="code">
+        /r/repeat/5/print/Hello;repeat/5/print/World
+      </div>
+
+      <a class="run"
+         href="https://urlcodeplay.vercel.app/r/repeat/5/print/Hello;repeat/5/print/World">
+        Run →
+      </a>
+
+    </div>
+
+
+    <div class="example">
+
+      <h3>Powers of Two</h3>
+
+      <p>Repeat an arithmetic transformation.</p>
+
+      <div class="code">
+        /r/set/x/1;repeat/10/multiply/x/2;print/x
+      </div>
+
+      <a class="run"
+         href="https://urlcodeplay.vercel.app/r/set/x/1;repeat/10/multiply/x/2;print/x">
+        Run →
+      </a>
+
+    </div>
+
+
+    <div class="example">
+
+      <h3>Compound Interest</h3>
+
+      <p>Five periods of 5% growth.</p>
+
+      <div class="code">
+        /r/set/balance/1000;repeat/5/multiply/balance/1.05;print/balance
+      </div>
+
+      <a class="run"
+         href="https://urlcodeplay.vercel.app/r/set/balance/1000;repeat/5/multiply/balance/1.05;print/balance">
+        Run →
+      </a>
+
+    </div>
+
+
+    <div class="example">
+
+      <h3>Multiple Variables</h3>
+
+      <p>Independent variables can be manipulated in sequence.</p>
+
+      <div class="code">
+        /r/set/a/1;set/b/100;repeat/3/add/a/2;repeat/3/subtract/b/10;print/a;print/b
+      </div>
+
+      <a class="run"
+         href="https://urlcodeplay.vercel.app/r/set/a/1;set/b/100;repeat/3/add/a/2;repeat/3/subtract/b/10;print/a;print/b">
+        Run →
+      </a>
+
+    </div>
+
+
+    <div class="example">
+
+      <h3>Read a Feed</h3>
+
+      <p>Fetch a public RSS feed as plain text.</p>
+
+      <div class="code">
+        /r/read/https:/news.ycombinator.com/rss
+      </div>
+
+      <a class="run"
+         href="https://urlcodeplay.vercel.app/r/read/https:/news.ycombinator.com/rss">
+        Run →
+      </a>
+
+    </div>
+
+  </div>
+
+</div>
+```
+
+  </section>
+
+  <section class="section">
+    <div class="container">
+
+```
+  <div class="concept-grid">
+
+    <div>
+      <h2>One URL. One program.</h2>
+
+      <p>
+        Traditional programs live in files, repositories or
+        applications.
+      </p>
+
+      <p>
+        URL Code puts the program directly into the address bar.
+      </p>
+
+      <p>
+        That makes every program naturally shareable,
+        bookmarkable and reproducible.
+      </p>
+
+      <p>
+        The URL is the source of truth.
+      </p>
+    </div>
+
+    <pre>/r/set/x/10
+ ;
+```
+
+add/x/20
+;
+multiply/x/3
+;
+print/x
+
+```
+    ↓
+
+ 90</pre>
+
+  </div>
+
+</div>
+```
+
+  </section>
+
+  <section class="section">
+    <div class="container">
+
+```
+  <h2>A tiny language</h2>
+
+  <p class="intro">
+    The current command set is intentionally small.
+  </p>
+
+  <table class="command-table">
+
+    <thead>
+      <tr>
+        <th>Command</th>
+        <th>Example</th>
+        <th>What it does</th>
+      </tr>
+    </thead>
+
+    <tbody>
+
+      <tr>
+        <td>print</td>
+        <td>print/Hello</td>
+        <td>Print text or a variable</td>
+      </tr>
+
+      <tr>
+        <td>set</td>
+        <td>set/x/10</td>
+        <td>Set a variable</td>
+      </tr>
+
+      <tr>
+        <td>add</td>
+        <td>add/x/5</td>
+        <td>Add to a variable</td>
+      </tr>
+
+      <tr>
+        <td>subtract</td>
+        <td>subtract/x/5</td>
+        <td>Subtract from a variable</td>
+      </tr>
+
+      <tr>
+        <td>multiply</td>
+        <td>multiply/x/2</td>
+        <td>Multiply a variable</td>
+      </tr>
+
+      <tr>
+        <td>divide</td>
+        <td>divide/x/2</td>
+        <td>Divide a variable</td>
+      </tr>
+
+      <tr>
+        <td>repeat</td>
+        <td>repeat/5/print/Hello</td>
+        <td>Repeat one command</td>
+      </tr>
+
+      <tr>
+        <td>read</td>
+        <td>read/https:/example.com</td>
+        <td>Fetch public text</td>
+      </tr>
+
+    </tbody>
+
+  </table>
+
+</div>
+```
+
+  </section>
+
+  <section class="section">
+    <div class="container">
+
+```
+  <h2>Where could this go?</h2>
+
+  <p class="intro">
+    URL Code is an experiment, not a replacement for JavaScript.
+  </p>
+
+  <div class="demo">
+
+    <div class="program">
+      input → transform → filter → calculate → output
+    </div>
+
+    <div class="output">
+      The interesting question is how much computation
+      can be expressed before a URL starts looking like a
+      programming language.
+    </div>
+
+  </div>
+
+</div>
+```
+
+  </section>
+
+</main>
+
+<footer>
+  <div class="container">
+
+```
+<div>
+  URL Code Play · by Saurabh Gayali
+</div>
+
+<div class="footer-links">
+  <a href="https://urlcodeplay.vercel.app/">Demo</a>
+  <a href="https://urlcodeplay.vercel.app/docs">Documentation</a>
+  <a href="https://urlcodeplay.vercel.app/about">About</a>
+  <a href="https://github.com/saurabhgayali/url-code-play">GitHub</a>
+</div>
+```
+
+  </div>
+</footer>
+
+</body>
 </html>
